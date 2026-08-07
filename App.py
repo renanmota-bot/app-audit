@@ -224,12 +224,21 @@ st.markdown("""
 def rolar_para_fim():
     js_scroll = """
     <script>
-        setTimeout(function() {
+        function scrollToBottom() {
+            var mainContainer = window.parent.document.querySelector('.main') || document.querySelector('.main') || window;
+            if (mainContainer) {
+                mainContainer.scrollTo({
+                    top: mainContainer.scrollHeight || document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
             window.scrollTo({
                 top: document.body.scrollHeight,
                 behavior: 'smooth'
             });
-        }, 100);
+        }
+        setTimeout(scrollToBottom, 150);
+        setTimeout(scrollToBottom, 400);
     </script>
     """
     st.components.v1.html(js_scroll, height=0)
@@ -690,6 +699,7 @@ elif modo == "📝 Simulado Hard com Cronômetro":
                 with st.expander(f"📖 Ver Explicação / Base Legal da Q{i+1}"):
                     st.write(q.get('explicacao', 'Sem explicação disponível.'))
                 st.markdown("---")
+            rolar_para_fim()
 
 # -----------------------------------------------------------------------------
 # MODO 4: DASHBOARD
