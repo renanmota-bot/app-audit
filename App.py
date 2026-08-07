@@ -16,7 +16,6 @@ from PyPDF2 import PdfReader
 # -----------------------------------------------------------------------------
 # CONFIGURAÇÕES DE API E RECURSOS DO ECOBOT
 # -----------------------------------------------------------------------------
-# Lê a API Key de forma segura do Secrets do Streamlit ou variáveis de ambiente
 try:
     API_KEY = st.secrets["GEMINI_API_KEY"]
 except Exception:
@@ -28,7 +27,7 @@ if API_KEY:
     genai.configure(api_key=API_KEY)
 
 # -----------------------------------------------------------------------------
-# CONFIGURAÇÃO DE PÁGINA E CSS
+# CONFIGURAÇÃO DE PÁGINA E CSS (BLINDAGEM MOBILE & AUTO-SCROLL)
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="Estudos Ambientais - EcoBot",
@@ -128,7 +127,7 @@ st.markdown("""
             100% { transform: translateY(0px) rotate(0deg); }
         }
 
-        /* CORREÇÃO DAS MENSAGENS DO CHAT */
+        /* CORREÇÃO DAS MENSAGENS DO CHAT (MOBILE & DESKTOP) */
         .stChatMessage, [data-testid="stChatMessage"] {
             background-color: #FFFFFF !important;
             border: 1.5px solid #E2E8F0 !important;
@@ -145,7 +144,7 @@ st.markdown("""
             font-weight: 500 !important;
         }
 
-        /* CORREÇÃO DO CAMPO DE DIGITAÇÃO */
+        /* CORREÇÃO DO CAMPO DE DIGITAÇÃO NO RODAPÉ */
         [data-testid="stChatInput"], [data-baseweb="input"] {
             background-color: #FFFFFF !important;
             border: 1.5px solid #10B981 !important;
@@ -159,23 +158,47 @@ st.markdown("""
             font-weight: 600 !important;
         }
 
-        /* SIDEBAR */
+        /* 🛠️ CORREÇÃO TOTAL DA SIDEBAR NO MOBILE (SELECTBOX E BOTÕES VISÍVEIS) */
         section[data-testid="stSidebar"] {
             background-color: #FFFFFF !important;
             border-right: 1px solid #E2E8F0 !important;
         }
 
-        section[data-testid="stSidebar"] * {
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] span,
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3 {
             color: #0F172A !important;
+            -webkit-text-fill-color: #0F172A !important;
+            font-weight: 700 !important;
         }
 
-        .stButton button {
-            width: 100% !important;
+        /* Força fundo branco e texto preto nos Selectbox/Dropdowns da Sidebar */
+        section[data-testid="stSidebar"] div[data-baseweb="select"] > div,
+        section[data-testid="stSidebar"] div[data-baseweb="select"] * {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+            -webkit-text-fill-color: #0F172A !important;
+            border: 1.5px solid #10B981 !important;
+            border-radius: 10px !important;
+        }
+
+        /* Força fundo verde e texto branco nos botões da Sidebar */
+        section[data-testid="stSidebar"] .stButton button {
+            background-color: #059669 !important;
+            color: #FFFFFF !important;
+            -webkit-text-fill-color: #FFFFFF !important;
             font-weight: bold !important;
             border-radius: 10px !important;
             padding: 10px !important;
-            transition: all 0.2s !important;
             border: none !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+
+        section[data-testid="stSidebar"] .stButton button:active {
+            background-color: #047857 !important;
         }
 
         .btn-gerar button { background-color: #0284C7 !important; color: white !important; -webkit-text-fill-color: white !important; }
@@ -194,6 +217,22 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
+# -----------------------------------------------------------------------------
+# FUNÇÃO AUXILIAR DE AUTO-SCROLL PARA A ÚLTIMA MENSAGEM
+# -----------------------------------------------------------------------------
+def rolar_para_fim():
+    js_scroll = """
+    <script>
+        setTimeout(function() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 100);
+    </script>
+    """
+    st.components.v1.html(js_scroll, height=0)
 
 # -----------------------------------------------------------------------------
 # MATRIZ DE ESTUDOS AMBIENTAIS
@@ -438,6 +477,7 @@ if modo == "🤖 EcoBot (Talking Tom)":
                     st.session_state.messages.append({"role": "assistant", "content": res})
                     st.session_state.mensagem_balao = res[:140] + "..." if len(res) > 140 else res
                     st.session_state.ultima_resposta_audio = res
+                    rolar_para_fim()
 
                 except Exception as e: st.error(f"Erro no processamento: {e}")
 
@@ -497,6 +537,7 @@ elif modo == "📖 Prof. Ambiental & Direito":
                     st.markdown(res)
                     st.session_state.messages.append({"role": "assistant", "content": res})
                     st.session_state.ultima_resposta_audio = res
+                    rolar_para_fim()
                 except Exception as e: st.error(f"Erro: {e}")
 
 # -----------------------------------------------------------------------------
@@ -527,6 +568,7 @@ elif modo == "🇬🇧 Prof. Inglês Técnico":
                     st.markdown(res)
                     st.session_state.messages.append({"role": "assistant", "content": res})
                     st.session_state.ultima_resposta_audio = res
+                    rolar_para_fim()
                 except Exception as e: st.error(f"Erro: {e}")
 
 # -----------------------------------------------------------------------------
@@ -692,4 +734,5 @@ elif modo == "📚 Chat com PDF / Edital":
                         st.markdown(res)
                         st.session_state.messages.append({"role": "assistant", "content": res})
                         st.session_state.ultima_resposta_audio = res
+                        rolar_para_fim()
                     except Exception as e: st.error(f"Erro: {e}")
