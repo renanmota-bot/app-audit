@@ -40,13 +40,9 @@ NICHOS_DISPONIVEIS = [
     "Condomínio / Comercial"
 ]
 
-# =====================================================================
-# 🔐 COFRE DE DADOS (IMPEDE O RESET AO MUDAR DE PÁGINA)
-# =====================================================================
-if "aba_ativa" not in st.session_state:
+# --- FUNÇÃO PARA INICIALIZAR OU RESETAR DADOS ---
+def resetar_dados():
     st.session_state.aba_ativa = LISTA_ABAS[0]
-
-if "db" not in st.session_state:
     st.session_state.db = {
         "consultor": "Renan",
         "data_vistoria": datetime.now(),
@@ -84,7 +80,12 @@ if "db" not in st.session_state:
         "margem": 30
     }
 
-# Atalho para o cofre de dados
+# =====================================================================
+# 🔐 COFRE DE DADOS (IMPEDE O RESET AO MUDAR DE PÁGINA)
+# =====================================================================
+if "aba_ativa" not in st.session_state or "db" not in st.session_state:
+    resetar_dados()
+
 db = st.session_state.db
 
 def formatar_nome_arquivo(empresa_nome, nicho_nome):
@@ -95,6 +96,9 @@ def formatar_nome_arquivo(empresa_nome, nicho_nome):
 
 def pular_aba(nome_aba):
     st.session_state.aba_ativa = nome_aba
+
+def sincronizar_menu_dropdown():
+    st.session_state.aba_ativa = st.session_state.w_select_navegacao
 
 # --- FUNÇÃO DE RECOMENDAÇÃO AUTOMÁTICA DE SERVIÇOS ---
 def gerar_servicos_recomendados():
@@ -126,13 +130,13 @@ def gerar_servicos_recomendados():
     servicos_sugeridos.add("Contrato Mensal de Gestão e Acompanhamento Ambiental")
     return list(servicos_sugeridos)
 
-# Sincroniza serviços iniciais no banco se estiver vazio
 if not db["servicos"]:
     db["servicos"] = gerar_servicos_recomendados()
 
 # --- SIDEBAR (MENU LATERAL FIXO E INTERATIVO) ---
 st.sidebar.markdown("<h2 style='color: white; font-weight: 900;'>🌱 EcoAudit Pro</h2>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='color: #A7F3D0; font-size: 0.85rem;'>MENU DE NAVEGAÇÃO</p>", unsafe_allow_html=True)
+st.sidebar.button("➕ Novo Relatório", on_click=resetar_dados, key="btn_novo_relatorio_sidebar", type="primary", use_container_width=True)
 st.sidebar.markdown("---")
 
 for item_aba in LISTA_ABAS:
@@ -223,7 +227,7 @@ st.markdown("""
         padding-bottom: 6px;
     }
 
-    /* 🛠️ CORREÇÃO DE CONTRASTE: CAIXAS DE ENTRADA, SELEÇÃO E RÓTULOS */
+    /* CONTRASTE: CAIXAS DE ENTRADA, SELEÇÃO E RÓTULOS */
     .stTextInput label, .stNumberInput label, .stSelectbox label, 
     .stTextArea label, .stDateInput label, .stTimeInput label, 
     .stMultiSelect label, .stSlider label {
@@ -333,6 +337,20 @@ st.markdown("""
         <p>Plataforma Profissional de Diagnóstico de Resíduos e Geração de PGRS</p>
     </div>
 """, unsafe_allow_html=True)
+
+# --- MENU DE NAVEGAÇÃO SUPERIOR & BOTÃO NOVO RELATÓRIO ---
+col_nav1, col_nav2 = st.columns([3, 1])
+with col_nav1:
+    st.selectbox(
+        "📍 Navegar pelas Páginas:",
+        options=LISTA_ABAS,
+        index=LISTA_ABAS.index(aba_ativa),
+        key="w_select_navegacao",
+        on_change=sincronizar_menu_dropdown
+    )
+with col_nav2:
+    st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
+    st.button("➕ Novo Relatório", on_click=resetar_dados, key="btn_novo_relatorio_top", type="secondary", use_container_width=True)
 
 # --- MÓDULO 1: LOCAL ---
 if aba_ativa == "📋 1. Local":
