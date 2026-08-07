@@ -20,7 +20,7 @@ API_KEY_PADRAO = "AIzaSyAy7KaL0IHOKnwGbmAfxE_NqIVq9LY9AEU"
 URL_ECOBOT = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrGnEZ3y-nutzMBkki7MfLa9SzSUYaSe1bu0U5ySrJg&s=10"
 
 # -----------------------------------------------------------------------------
-# CONFIGURAÇÃO DE PÁGINA E CSS (ESTILO TALKING TOM FOFO)
+# CONFIGURAÇÃO DE PÁGINA E CSS (BLINDAGEM LIGHT MODE NO MOBILE)
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="Estudos Ambientais - EcoBot",
@@ -31,9 +31,17 @@ st.set_page_config(
 
 st.markdown(f"""
     <style>
+        :root, html, body, .stApp, [data-testid="stAppViewContainer"], [data-theme="dark"], [data-theme="light"] {{
+            --background-color: #F8FAFC !important;
+            --secondary-background-color: #FFFFFF !important;
+            --text-color: #0F172A !important;
+            --primary-color: #10B981 !important;
+            color-scheme: light !important;
+        }}
+
         .stApp {{
-            background-color: #f8fafc !important;
-            color: #0f172a !important;
+            background-color: #F8FAFC !important;
+            color: #0F172A !important;
         }}
 
         #MainMenu {{visibility: hidden;}}
@@ -57,17 +65,17 @@ st.markdown(f"""
 
         /* BALÃO DE DIÁLOGO DO TALKING TOM */
         .talking-speech-bubble {{
-            background: #ffffff;
-            border: 3px solid #10b981;
+            background: #FFFFFF !important;
+            border: 3px solid #10B981 !important;
             border-radius: 20px;
             padding: 16px 22px;
             max-width: 550px;
             box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
             font-size: 1.05rem;
-            color: #0f172a;
+            color: #0F172A !important;
             position: relative;
             line-height: 1.5;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
             margin-bottom: 20px;
         }}
@@ -80,7 +88,7 @@ st.markdown(f"""
             transform: translateX(-50%);
             border-width: 14px 14px 0;
             border-style: solid;
-            border-color: #10b981 transparent;
+            border-color: #10B981 transparent;
             display: block;
             width: 0;
         }}
@@ -90,9 +98,9 @@ st.markdown(f"""
             width: 210px;
             height: 210px;
             border-radius: 50%;
-            border: 5px solid #10b981;
+            border: 5px solid #10B981;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-            background: #ffffff;
+            background: #FFFFFF !important;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -115,7 +123,7 @@ st.markdown(f"""
         /* ANIMAÇÃO QUANDO ESTÁ FALANDO */
         .ecobot-talking .talking-avatar-frame {{
             animation: talkMouth 0.22s infinite alternate !important;
-            border-color: #34d399 !important;
+            border-color: #34D399 !important;
             box-shadow: 0 0 35px rgba(52, 211, 153, 0.8) !important;
         }}
 
@@ -124,19 +132,45 @@ st.markdown(f"""
             100% {{ transform: scale(1.06) translateY(-7px); filter: brightness(1.1); }}
         }}
 
-        .stChatMessage {{
-            background-color: #ffffff !important;
-            border: 1px solid #e2e8f0 !important;
+        /* 🛠️ CORREÇÃO DE LEITURA DAS MENSAGENS NO CHAT (MOBILE & DESKTOP) */
+        .stChatMessage, [data-testid="stChatMessage"] {{
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #E2E8F0 !important;
             border-radius: 14px !important;
             padding: 15px !important;
             margin-bottom: 10px !important;
-            color: #0f172a !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
+            color: #0F172A !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03) !important;
         }}
 
+        .stChatMessage p, .stChatMessage span, .stChatMessage div, [data-testid="stChatMessage"] * {{
+            color: #0F172A !important;
+            -webkit-text-fill-color: #0F172A !important;
+            font-weight: 500 !important;
+        }}
+
+        /* 🛠️ CORREÇÃO DA CAIXA DE DIGITAÇÃO DO CHAT (CHAT INPUT) */
+        [data-testid="stChatInput"], [data-baseweb="input"] {{
+            background-color: #FFFFFF !important;
+            border: 1.5px solid #10B981 !important;
+            border-radius: 12px !important;
+        }}
+
+        [data-testid="stChatInput"] textarea, [data-testid="stChatInput"] input {{
+            color: #0F172A !important;
+            background-color: #FFFFFF !important;
+            -webkit-text-fill-color: #0F172A !important;
+            font-weight: 600 !important;
+        }}
+
+        /* SIDEBAR */
         section[data-testid="stSidebar"] {{
-            background-color: #ffffff !important;
-            border-right: 1px solid #e2e8f0 !important;
+            background-color: #FFFFFF !important;
+            border-right: 1px solid #E2E8F0 !important;
+        }}
+
+        section[data-testid="stSidebar"] * {{
+            color: #0F172A !important;
         }}
 
         .stButton button {{
@@ -148,18 +182,18 @@ st.markdown(f"""
             border: none !important;
         }}
 
-        .btn-gerar button {{ background-color: #0284c7 !important; color: white !important; }}
-        .btn-lei button {{ background-color: #059669 !important; color: white !important; }}
-        .btn-flash button {{ background-color: #d97706 !important; color: white !important; }}
-        .btn-pdf button {{ background-color: #4f46e5 !important; color: white !important; }}
+        .btn-gerar button {{ background-color: #0284C7 !important; color: white !important; -webkit-text-fill-color: white !important; }}
+        .btn-lei button {{ background-color: #059669 !important; color: white !important; -webkit-text-fill-color: white !important; }}
+        .btn-flash button {{ background-color: #D97706 !important; color: white !important; -webkit-text-fill-color: white !important; }}
+        .btn-pdf button {{ background-color: #4F46E5 !important; color: white !important; -webkit-text-fill-color: white !important; }}
 
         .score-card {{
-            background-color: #ecfdf5;
-            border: 2px solid #059669;
+            background-color: #ECFDF5 !important;
+            border: 2px solid #059669 !important;
             border-radius: 16px;
             padding: 20px;
             text-align: center;
-            color: #065f46;
+            color: #065F46 !important;
             margin: 15px 0;
         }}
     </style>
@@ -219,7 +253,7 @@ def buscar_previsao_tempo(cidade="Sao Paulo"):
         return f"{cidade.title()}: Ensolarado com 25°C."
 
 # -----------------------------------------------------------------------------
-# MOTOR DA IA (DINÂMICO E BLINDADO CONTRA ERRO 404)
+# MOTOR DA IA
 # -----------------------------------------------------------------------------
 def chamar_ia(prompt, json_mode=False):
     config = genai.GenerationConfig(
@@ -230,7 +264,6 @@ def chamar_ia(prompt, json_mode=False):
     
     prompt_direto = f"Responda diretamente ao usuário em português de forma clara e objetiva sem rascunhos.\n\n{prompt}"
 
-    # Busca dinamicamente os modelos disponíveis na API Key sem usar hardcode desatualizado
     modelos_disponiveis = []
     try:
         for m in genai.list_models():
@@ -239,7 +272,6 @@ def chamar_ia(prompt, json_mode=False):
     except Exception:
         modelos_disponiveis = ["models/gemini-1.5-flash", "models/gemini-1.5-pro"]
 
-    # Ordena para preferir modelos 'flash' (mais rápidos)
     modelos_disponiveis.sort(key=lambda x: 0 if 'flash' in x else 1)
 
     ultimo_erro = ""
@@ -355,7 +387,6 @@ if 'ultima_resposta_audio' not in st.session_state: st.session_state.ultima_resp
 if modo == "🤖 EcoBot (Talking Tom)":
     st.markdown("<h2 style='text-align: center;'>🤖 EcoBot - Seu Amigo Robô</h2>", unsafe_allow_html=True)
 
-    # Palco com o Personagem Grande e Balão de Fala
     st.markdown(f"""
         <div class="talking-stage">
             <div class="talking-speech-bubble">
@@ -368,7 +399,6 @@ if modo == "🤖 EcoBot (Talking Tom)":
         </div>
     """, unsafe_allow_html=True)
 
-    # Botão de voz fofa
     col_a, col_b, col_c = st.columns([1, 2, 1])
     with col_b:
         if st.session_state.ultima_resposta_audio:
