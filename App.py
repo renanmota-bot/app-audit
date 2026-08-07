@@ -146,21 +146,25 @@ for item_aba in LISTA_ABAS:
 
 aba_ativa = st.session_state.aba_ativa
 
-# --- ESTÉTICA E CSS MOBILE-FIRST (FORÇA LIGHT MODE NO IOS) ---
+# --- ESTÉTICA E CSS MOBILE-FIRST (BLINDAGEM TOTAL CONTRA DARK MODE) ---
 st.markdown("""
     <style>
-    /* Força esquema de cores claro no sistema do navegador */
-    :root {
+    /* 1. REESCREVE AS VARIÁVEIS GLOBAIS DO STREAMLIT (NATIVO E IOS SAFARI) */
+    :root, html, body, .stApp, [data-testid="stAppViewContainer"], [data-theme="dark"], [data-theme="light"] {
+        --background-color: #F8FAFC !important;
+        --secondary-background-color: #FFFFFF !important;
+        --text-color: #0F172A !important;
+        --primary-color: #059669 !important;
         color-scheme: light !important;
     }
 
-    /* Fundo geral da aplicação */
-    .stApp, [data-testid="stAppViewContainer"] { 
+    /* Fundo geral do app */
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] { 
         background-color: #F8FAFC !important; 
         color: #0F172A !important;
     }
 
-    /* Ajuste de espaçamento para móveis */
+    /* Ajuste de espaçamento para telas móveis */
     .block-container {
         padding-top: 1rem !important;
         padding-bottom: 2rem !important;
@@ -210,25 +214,52 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* FORÇA FUNDO BRANCO E TEXTO ESCURO NAS CAIXAS (PREVINE DARK MODE NO SAFARI/IOS) */
+    /* 2. FORÇA FUNDO BRANCO E TEXTO PRETO EM TODOS OS INPUTS, TEXTAREAS, HORÁRIO E SELECTS */
     div[data-baseweb="input"], 
     div[data-baseweb="textarea"], 
-    div[data-baseweb="select"] > div {
+    div[data-baseweb="base-input"],
+    div[data-baseweb="select"] > div,
+    .stTextInput input,
+    .stTextArea textarea,
+    .stTimeInput input,
+    .stDateInput input,
+    .stNumberInput input {
         background-color: #FFFFFF !important;
+        color: #0F172A !important;
         border: 1.5px solid #059669 !important;
         border-radius: 10px !important;
-    }
-
-    div[data-baseweb="input"] input, 
-    div[data-baseweb="textarea"] textarea,
-    div[data-baseweb="select"] span {
-        color: #0F172A !important;
-        background-color: #FFFFFF !important;
-        font-weight: 600 !important;
         -webkit-text-fill-color: #0F172A !important;
     }
 
-    /* ESTILIZAÇÃO DOS BOTÕES DE AÇÃO E DOWNLOAD */
+    /* Placeholder text */
+    ::placeholder, ::-webkit-input-placeholder {
+        color: #64748B !important;
+        -webkit-text-fill-color: #64748B !important;
+        opacity: 1 !important;
+    }
+
+    /* 3. CORREÇÃO DOS BOTOES PILLS E SEGMENTED CONTROL (AUDITORIA, FILIAIS, PRODUTIVOS) */
+    [data-testid="stPills"] button,
+    [data-testid="stSegmentedControl"] button,
+    div[data-baseweb="segmented-control"] button {
+        background-color: #FFFFFF !important;
+        color: #0F172A !important;
+        border: 1.5px solid #CBD5E1 !important;
+        -webkit-text-fill-color: #0F172A !important;
+        font-weight: 700 !important;
+    }
+
+    [data-testid="stPills"] button[aria-selected="true"],
+    [data-testid="stSegmentedControl"] button[aria-selected="true"],
+    div[data-baseweb="segmented-control"] button[aria-selected="true"] {
+        background-color: #059669 !important;
+        color: #FFFFFF !important;
+        border: 1.5px solid #047857 !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        font-weight: 900 !important;
+    }
+
+    /* 4. ESTILIZAÇÃO DOS BOTÕES DE AÇÃO E DOWNLOAD */
     .stDownloadButton > button, .stButton > button {
         background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
         color: #FFFFFF !important;
@@ -783,7 +814,7 @@ def gerar_pdf_minuta_pgrs():
     pdf.set_font("Helvetica", "", 10)
     pdf.multi_cell(0, 5, limpar_texto_pdf(
         "Declaramos que as informações contidas nesta minuta refletem fielmente a estrutura operacional e a rotina do estabelecimento, "
-        "comprometendo-se as partes com a implantação e manutenção contínua das diretrizes established."
+        "comprometendo-se as partes com a implantação e manutenção contínua das diretrizes estabelecidas."
     ))
     pdf.ln(25)
     
