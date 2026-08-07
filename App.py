@@ -16,11 +16,19 @@ from PyPDF2 import PdfReader
 # -----------------------------------------------------------------------------
 # CONFIGURAÇÕES DE API E RECURSOS DO ECOBOT
 # -----------------------------------------------------------------------------
-API_KEY_PADRAO = "AIzaSyAy7KaL0IHOKnwGbmAfxE_NqIVq9LY9AEU"
+# Lê a API Key de forma segura do Secrets do Streamlit ou variáveis de ambiente
+try:
+    API_KEY = st.secrets["GEMINI_API_KEY"]
+except Exception:
+    API_KEY = os.environ.get("GEMINI_API_KEY", "")
+
 URL_ECOBOT = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmrGnEZ3y-nutzMBkki7MfLa9SzSUYaSe1bu0U5ySrJg&s=10"
 
+if API_KEY:
+    genai.configure(api_key=API_KEY)
+
 # -----------------------------------------------------------------------------
-# CONFIGURAÇÃO DE PÁGINA E CSS (BLINDAGEM LIGHT MODE NO MOBILE)
+# CONFIGURAÇÃO DE PÁGINA E CSS
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="Estudos Ambientais - EcoBot",
@@ -29,42 +37,42 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.markdown(f"""
+st.markdown("""
     <style>
-        :root, html, body, .stApp, [data-testid="stAppViewContainer"], [data-theme="dark"], [data-theme="light"] {{
+        :root, html, body, .stApp, [data-testid="stAppViewContainer"], [data-theme="dark"], [data-theme="light"] {
             --background-color: #F8FAFC !important;
             --secondary-background-color: #FFFFFF !important;
             --text-color: #0F172A !important;
             --primary-color: #10B981 !important;
             color-scheme: light !important;
-        }}
+        }
 
-        .stApp {{
+        .stApp {
             background-color: #F8FAFC !important;
             color: #0F172A !important;
-        }}
+        }
 
-        #MainMenu {{visibility: hidden;}}
-        footer {{visibility: hidden;}}
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
         
-        .block-container {{
+        .block-container {
             padding-top: 1.5rem !important;
             padding-bottom: 5rem !important;
             max-width: 1000px !important;
-        }}
+        }
 
-        /* PALCO DO TALKING TOM (CENTRALIZADO) */
-        .talking-stage {{
+        /* PALCO DO TALKING TOM */
+        .talking-stage {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             margin: 15px 0;
             position: relative;
-        }}
+        }
 
-        /* BALÃO DE DIÁLOGO DO TALKING TOM */
-        .talking-speech-bubble {{
+        /* BALÃO DE DIÁLOGO */
+        .talking-speech-bubble {
             background: #FFFFFF !important;
             border: 3px solid #10B981 !important;
             border-radius: 20px;
@@ -78,9 +86,9 @@ st.markdown(f"""
             font-weight: 600;
             text-align: center;
             margin-bottom: 20px;
-        }}
+        }
 
-        .talking-speech-bubble::after {{
+        .talking-speech-bubble::after {
             content: '';
             position: absolute;
             bottom: -14px;
@@ -91,10 +99,10 @@ st.markdown(f"""
             border-color: #10B981 transparent;
             display: block;
             width: 0;
-        }}
+        }
 
-        /* PERSONAGEM GRANDE DENTRO DO PALCO */
-        .talking-avatar-frame {{
+        /* PERSONAGEM */
+        .talking-avatar-frame {
             width: 210px;
             height: 210px;
             border-radius: 50%;
@@ -106,34 +114,22 @@ st.markdown(f"""
             align-items: center;
             justify-content: center;
             animation: floatCharacter 3s ease-in-out infinite;
-        }}
+        }
 
-        .talking-avatar-img {{
+        .talking-avatar-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }}
+        }
 
-        @keyframes floatCharacter {{
-            0% {{ transform: translateY(0px) rotate(0deg); }}
-            50% {{ transform: translateY(-8px) rotate(2deg); }}
-            100% {{ transform: translateY(0px) rotate(0deg); }}
-        }}
+        @keyframes floatCharacter {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
 
-        /* ANIMAÇÃO QUANDO ESTÁ FALANDO */
-        .ecobot-talking .talking-avatar-frame {{
-            animation: talkMouth 0.22s infinite alternate !important;
-            border-color: #34D399 !important;
-            box-shadow: 0 0 35px rgba(52, 211, 153, 0.8) !important;
-        }}
-
-        @keyframes talkMouth {{
-            0% {{ transform: scale(1) translateY(-3px); filter: brightness(1); }}
-            100% {{ transform: scale(1.06) translateY(-7px); filter: brightness(1.1); }}
-        }}
-
-        /* 🛠️ CORREÇÃO DE LEITURA DAS MENSAGENS NO CHAT (MOBILE & DESKTOP) */
-        .stChatMessage, [data-testid="stChatMessage"] {{
+        /* CORREÇÃO DAS MENSAGENS DO CHAT */
+        .stChatMessage, [data-testid="stChatMessage"] {
             background-color: #FFFFFF !important;
             border: 1.5px solid #E2E8F0 !important;
             border-radius: 14px !important;
@@ -141,53 +137,53 @@ st.markdown(f"""
             margin-bottom: 10px !important;
             color: #0F172A !important;
             box-shadow: 0 2px 5px rgba(0,0,0,0.03) !important;
-        }}
+        }
 
-        .stChatMessage p, .stChatMessage span, .stChatMessage div, [data-testid="stChatMessage"] * {{
+        .stChatMessage p, .stChatMessage span, .stChatMessage div, [data-testid="stChatMessage"] * {
             color: #0F172A !important;
             -webkit-text-fill-color: #0F172A !important;
             font-weight: 500 !important;
-        }}
+        }
 
-        /* 🛠️ CORREÇÃO DA CAIXA DE DIGITAÇÃO DO CHAT (CHAT INPUT) */
-        [data-testid="stChatInput"], [data-baseweb="input"] {{
+        /* CORREÇÃO DO CAMPO DE DIGITAÇÃO */
+        [data-testid="stChatInput"], [data-baseweb="input"] {
             background-color: #FFFFFF !important;
             border: 1.5px solid #10B981 !important;
             border-radius: 12px !important;
-        }}
+        }
 
-        [data-testid="stChatInput"] textarea, [data-testid="stChatInput"] input {{
+        [data-testid="stChatInput"] textarea, [data-testid="stChatInput"] input {
             color: #0F172A !important;
             background-color: #FFFFFF !important;
             -webkit-text-fill-color: #0F172A !important;
             font-weight: 600 !important;
-        }}
+        }
 
         /* SIDEBAR */
-        section[data-testid="stSidebar"] {{
+        section[data-testid="stSidebar"] {
             background-color: #FFFFFF !important;
             border-right: 1px solid #E2E8F0 !important;
-        }}
+        }
 
-        section[data-testid="stSidebar"] * {{
+        section[data-testid="stSidebar"] * {
             color: #0F172A !important;
-        }}
+        }
 
-        .stButton button {{
+        .stButton button {
             width: 100% !important;
             font-weight: bold !important;
             border-radius: 10px !important;
             padding: 10px !important;
             transition: all 0.2s !important;
             border: none !important;
-        }}
+        }
 
-        .btn-gerar button {{ background-color: #0284C7 !important; color: white !important; -webkit-text-fill-color: white !important; }}
-        .btn-lei button {{ background-color: #059669 !important; color: white !important; -webkit-text-fill-color: white !important; }}
-        .btn-flash button {{ background-color: #D97706 !important; color: white !important; -webkit-text-fill-color: white !important; }}
-        .btn-pdf button {{ background-color: #4F46E5 !important; color: white !important; -webkit-text-fill-color: white !important; }}
+        .btn-gerar button { background-color: #0284C7 !important; color: white !important; -webkit-text-fill-color: white !important; }
+        .btn-lei button { background-color: #059669 !important; color: white !important; -webkit-text-fill-color: white !important; }
+        .btn-flash button { background-color: #D97706 !important; color: white !important; -webkit-text-fill-color: white !important; }
+        .btn-pdf button { background-color: #4F46E5 !important; color: white !important; -webkit-text-fill-color: white !important; }
 
-        .score-card {{
+        .score-card {
             background-color: #ECFDF5 !important;
             border: 2px solid #059669 !important;
             border-radius: 16px;
@@ -195,7 +191,7 @@ st.markdown(f"""
             text-align: center;
             color: #065F46 !important;
             margin: 15px 0;
-        }}
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -367,11 +363,8 @@ if st.session_state.modo_atual != modo:
     st.session_state.messages = []
     st.session_state.modo_atual = modo
 
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 🔑 **Autenticação**")
-user_key = st.sidebar.text_input("Sua API Key:", value=API_KEY_PADRAO, type="password")
-if user_key: genai.configure(api_key=user_key)
-else: st.stop()
+if not API_KEY:
+    st.sidebar.warning("⚠️ Adicione a GEMINI_API_KEY nos Secrets do Streamlit.")
 
 if 'simulado_dados' not in st.session_state: st.session_state.simulado_dados = None
 if 'simulado_corrigido' not in st.session_state: st.session_state.simulado_corrigido = False
