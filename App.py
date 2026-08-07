@@ -133,7 +133,7 @@ def gerar_servicos_recomendados():
 if not db["servicos"]:
     db["servicos"] = gerar_servicos_recomendados()
 
-# --- SIDEBAR (MENU LATERAL FIXO E INTERATIVO) ---
+# --- SIDEBAR ---
 st.sidebar.markdown("<h2 style='color: white; font-weight: 900;'>🌱 EcoAudit Pro</h2>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='color: #A7F3D0; font-size: 0.85rem;'>MENU DE NAVEGAÇÃO</p>", unsafe_allow_html=True)
 st.sidebar.button("➕ Novo Relatório", on_click=resetar_dados, key="btn_novo_relatorio_sidebar", type="primary", use_container_width=True)
@@ -146,16 +146,21 @@ for item_aba in LISTA_ABAS:
 
 aba_ativa = st.session_state.aba_ativa
 
-# --- ESTÉTICA E CSS MOBILE-FIRST (CONTRASTE E CAIXAS CORRIGIDAS) ---
+# --- ESTÉTICA E CSS MOBILE-FIRST (FORÇA LIGHT MODE NO IOS) ---
 st.markdown("""
     <style>
-    /* Fundo da aplicação */
-    .stApp { 
-        background-color: #F1F5F9 !important; 
+    /* Força esquema de cores claro no sistema do navegador */
+    :root {
+        color-scheme: light !important;
+    }
+
+    /* Fundo geral da aplicação */
+    .stApp, [data-testid="stAppViewContainer"] { 
+        background-color: #F8FAFC !important; 
         color: #0F172A !important;
     }
 
-    /* Ajuste de espaçamento geral para telas móveis */
+    /* Ajuste de espaçamento para móveis */
     .block-container {
         padding-top: 1rem !important;
         padding-bottom: 2rem !important;
@@ -163,31 +168,12 @@ st.markdown("""
         padding-right: 0.8rem !important;
     }
 
-    /* Menu Lateral */
+    /* Sidebar */
     [data-testid="stSidebar"] {
         background-color: #064E3B !important; 
-        padding-top: 10px;
-    }
-    
-    [data-testid="stSidebar"] div.stButton > button {
-        background: #047857 !important; 
-        color: #FFFFFF !important; 
-        font-size: 0.95rem !important;
-        font-weight: 700 !important; 
-        padding: 12px 16px !important; 
-        border-radius: 12px !important;
-        border: 1px solid #059669 !important; 
-        text-align: left !important; 
-        margin-bottom: 2px !important;
-    }
-    
-    [data-testid="stSidebar"] div.stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-        border: 2px solid #34D399 !important; 
-        font-weight: 800 !important;
     }
 
-    /* Cabeçalho Principal */
+    /* Header */
     .main-header {
         background: linear-gradient(135deg, #047857 0%, #065F46 50%, #064E3B 100%);
         padding: 16px 20px; 
@@ -196,21 +182,12 @@ st.markdown("""
         margin-bottom: 16px;
         border-left: 6px solid #34D399;
     }
-    .main-header h1 { 
-        color: #FFFFFF !important; 
-        font-weight: 900; 
-        font-size: 1.5rem !important; 
-        margin-bottom: 4px; 
-    }
-    .main-header p { 
-        color: #A7F3D0 !important; 
-        font-size: 0.85rem !important; 
-        margin: 0; 
-    }
+    .main-header h1 { color: #FFFFFF !important; font-weight: 900; font-size: 1.5rem !important; margin: 0; }
+    .main-header p { color: #A7F3D0 !important; font-size: 0.85rem !important; margin: 0; }
 
-    /* Cards de Conteúdo */
+    /* Cards Brancos */
     .glass-card {
-        background: #FFFFFF !important; 
+        background-color: #FFFFFF !important; 
         border-radius: 14px; 
         padding: 16px;
         border: 1px solid #CBD5E1; 
@@ -227,106 +204,54 @@ st.markdown("""
         padding-bottom: 6px;
     }
 
-    /* CONTRASTE: CAIXAS DE ENTRADA, SELEÇÃO E RÓTULOS */
-    .stTextInput label, .stNumberInput label, .stSelectbox label, 
-    .stTextArea label, .stDateInput label, .stTimeInput label, 
-    .stMultiSelect label, .stSlider label {
+    /* Rótulos das perguntas */
+    label, p, span, h1, h2, h3, h4, h5, h6 {
         color: #0F172A !important;
         font-weight: 700 !important;
-        font-size: 0.95rem !important;
     }
 
-    div[data-baseweb="input"] {
-        background-color: #FFFFFF !important;
-        border: 1.5px solid #059669 !important;
-        border-radius: 10px !important;
-    }
-    
-    div[data-baseweb="input"] input {
-        color: #0F172A !important;
-        background-color: #FFFFFF !important;
-        font-weight: 700 !important;
-        -webkit-text-fill-color: #0F172A !important;
-    }
-
-    div[data-baseweb="textarea"] {
+    /* FORÇA FUNDO BRANCO E TEXTO ESCURO NAS CAIXAS (PREVINE DARK MODE NO SAFARI/IOS) */
+    div[data-baseweb="input"], 
+    div[data-baseweb="textarea"], 
+    div[data-baseweb="select"] > div {
         background-color: #FFFFFF !important;
         border: 1.5px solid #059669 !important;
         border-radius: 10px !important;
     }
 
-    div[data-baseweb="textarea"] textarea {
+    div[data-baseweb="input"] input, 
+    div[data-baseweb="textarea"] textarea,
+    div[data-baseweb="select"] span {
         color: #0F172A !important;
         background-color: #FFFFFF !important;
         font-weight: 600 !important;
         -webkit-text-fill-color: #0F172A !important;
     }
 
-    div[data-baseweb="select"] > div {
-        background-color: #FFFFFF !important;
-        border: 1.5px solid #059669 !important;
-        border-radius: 10px !important;
-        color: #0F172A !important;
-    }
-
-    div[data-baseweb="select"] span {
-        color: #0F172A !important;
-        font-weight: 700 !important;
-    }
-
-    /* Botões operacionais */
-    .stButton > button {
-        width: 100% !important;
+    /* ESTILIZAÇÃO DOS BOTÕES DE AÇÃO E DOWNLOAD */
+    .stDownloadButton > button, .stButton > button {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+        color: #FFFFFF !important;
+        border: none !important;
         border-radius: 10px !important;
         padding: 12px 16px !important;
-        font-weight: 700 !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem !important;
+        width: 100% !important;
+        -webkit-text-fill-color: #FFFFFF !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
     }
 
-    /* Indicadores / Cards Coloridos */
-    .score-balloon { 
-        background: #ECFDF5 !important; 
-        border: 2px solid #10B981 !important; 
-        border-radius: 14px; 
-        padding: 16px; 
-        text-align: center; 
-        margin-bottom: 12px;
+    .stDownloadButton > button:active, .stButton > button:active {
+        background: #064E3B !important;
     }
-    .score-number { 
-        font-size: 2.8rem; 
-        font-weight: 900; 
-        color: #047857 !important; 
-        margin: 6px 0; 
-    }
-    
-    .multa-card { 
-        background: #FEF2F2 !important; 
-        border: 2px solid #F87171 !important; 
-        border-radius: 14px; 
-        padding: 16px; 
-        text-align: center; 
-        margin-bottom: 12px;
-    }
-    
-    .economia-card { 
-        background: #F0FDF4 !important; 
-        border: 2px solid #4ADE80 !important; 
-        border-radius: 14px; 
-        padding: 16px; 
-        text-align: center; 
-        margin-bottom: 12px;
-    }
-    
-    .badge-servico {
-        background-color: #E0F2FE !important;
-        border: 1px solid #0284C7 !important;
-        color: #0369A1 !important;
-        padding: 6px 10px;
-        border-radius: 8px;
-        font-weight: 700;
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-        display: inline-block;
-    }
+
+    /* Indicadores de métricas */
+    .score-balloon { background: #ECFDF5 !important; border: 2px solid #10B981 !important; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 12px; }
+    .score-number { font-size: 2.8rem; font-weight: 900; color: #047857 !important; margin: 6px 0; }
+    .multa-card { background: #FEF2F2 !important; border: 2px solid #F87171 !important; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 12px; }
+    .economia-card { background: #F0FDF4 !important; border: 2px solid #4ADE80 !important; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 12px; }
+    .badge-servico { background-color: #E0F2FE !important; border: 1px solid #0284C7 !important; color: #0369A1 !important; padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; display: inline-block; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -858,7 +783,7 @@ def gerar_pdf_minuta_pgrs():
     pdf.set_font("Helvetica", "", 10)
     pdf.multi_cell(0, 5, limpar_texto_pdf(
         "Declaramos que as informações contidas nesta minuta refletem fielmente a estrutura operacional e a rotina do estabelecimento, "
-        "comprometendo-se as partes com a implantação e manutenção contínua das diretrizes estabelecidas."
+        "comprometendo-se as partes com a implantação e manutenção contínua das diretrizes established."
     ))
     pdf.ln(25)
     
