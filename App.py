@@ -142,7 +142,7 @@ for item_aba in LISTA_ABAS:
 
 aba_ativa = st.session_state.aba_ativa
 
-# --- ESTÉTICA E CSS MOBILE-FIRST (CONTRASTE E TIPOGRAFIA CORRIGIDOS) ---
+# --- ESTÉTICA E CSS MOBILE-FIRST (CONTRASTE E CAIXAS CORRIGIDAS) ---
 st.markdown("""
     <style>
     /* Fundo da aplicação */
@@ -223,23 +223,54 @@ st.markdown("""
         padding-bottom: 6px;
     }
 
-    /* Ajuste de Contraste e Leitura dos Inputs de Texto/Números */
-    label, p, span, h1, h2, h3, h4, h5, h6 {
+    /* 🛠️ CORREÇÃO DE CONTRASTE: CAIXAS DE ENTRADA, SELEÇÃO E RÓTULOS */
+    .stTextInput label, .stNumberInput label, .stSelectbox label, 
+    .stTextArea label, .stDateInput label, .stTimeInput label, 
+    .stMultiSelect label, .stSlider label {
         color: #0F172A !important;
-        font-weight: 600;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
     }
 
-    div[data-baseweb="input"] input, div[data-baseweb="textarea"] textarea {
+    div[data-baseweb="input"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #059669 !important;
+        border-radius: 10px !important;
+    }
+    
+    div[data-baseweb="input"] input {
         color: #0F172A !important;
+        background-color: #FFFFFF !important;
+        font-weight: 700 !important;
+        -webkit-text-fill-color: #0F172A !important;
+    }
+
+    div[data-baseweb="textarea"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #059669 !important;
+        border-radius: 10px !important;
+    }
+
+    div[data-baseweb="textarea"] textarea {
+        color: #0F172A !important;
+        background-color: #FFFFFF !important;
         font-weight: 600 !important;
-        background-color: #F8FAFC !important;
+        -webkit-text-fill-color: #0F172A !important;
+    }
+
+    div[data-baseweb="select"] > div {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #059669 !important;
+        border-radius: 10px !important;
+        color: #0F172A !important;
     }
 
     div[data-baseweb="select"] span {
         color: #0F172A !important;
+        font-weight: 700 !important;
     }
 
-    /* Botões operacionais em 100% no celular */
+    /* Botões operacionais */
     .stButton > button {
         width: 100% !important;
         border-radius: 10px !important;
@@ -247,7 +278,7 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Indicadores / Cards Coloridos de Métricas */
+    /* Indicadores / Cards Coloridos */
     .score-balloon { 
         background: #ECFDF5 !important; 
         border: 2px solid #10B981 !important; 
