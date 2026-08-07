@@ -14,7 +14,7 @@ st.set_page_config(
     page_title="EcoAudit Pro - Gestão de Resíduos",
     page_icon="🌱",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # --- LISTA DE ABAS E NICHOS ---
@@ -142,61 +142,153 @@ for item_aba in LISTA_ABAS:
 
 aba_ativa = st.session_state.aba_ativa
 
-# --- ESTÉTICA E CSS ---
+# --- ESTÉTICA E CSS MOBILE-FIRST (CONTRASTE E TIPOGRAFIA CORRIGIDOS) ---
 st.markdown("""
     <style>
-    .stApp { background-color: #E2E8F0; }
-    
+    /* Fundo da aplicação */
+    .stApp { 
+        background-color: #F1F5F9 !important; 
+        color: #0F172A !important;
+    }
+
+    /* Ajuste de espaçamento geral para telas móveis */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 2rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+    }
+
+    /* Menu Lateral */
     [data-testid="stSidebar"] {
-        background-color: #064E3B !important; padding-top: 10px;
+        background-color: #064E3B !important; 
+        padding-top: 10px;
     }
     
     [data-testid="stSidebar"] div.stButton > button {
-        background: #047857 !important; color: #FFFFFF !important; font-size: 0.95rem !important;
-        font-weight: 700 !important; padding: 12px 16px !important; border-radius: 12px !important;
-        border: 1px solid #059669 !important; text-align: left !important; margin-bottom: 2px !important;
+        background: #047857 !important; 
+        color: #FFFFFF !important; 
+        font-size: 0.95rem !important;
+        font-weight: 700 !important; 
+        padding: 12px 16px !important; 
+        border-radius: 12px !important;
+        border: 1px solid #059669 !important; 
+        text-align: left !important; 
+        margin-bottom: 2px !important;
     }
     
     [data-testid="stSidebar"] div.stButton > button[kind="primary"] {
         background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-        border: 2px solid #34D399 !important; font-weight: 800 !important;
+        border: 2px solid #34D399 !important; 
+        font-weight: 800 !important;
     }
 
+    /* Cabeçalho Principal */
     .main-header {
         background: linear-gradient(135deg, #047857 0%, #065F46 50%, #064E3B 100%);
-        padding: 20px 26px; border-radius: 16px; color: white; margin-bottom: 22px;
-        border-left: 8px solid #34D399;
+        padding: 16px 20px; 
+        border-radius: 14px; 
+        color: white; 
+        margin-bottom: 16px;
+        border-left: 6px solid #34D399;
     }
-    .main-header h1 { color: #FFFFFF !important; font-weight: 900; font-size: 2rem; margin-bottom: 4px; }
-    .main-header p { color: #A7F3D0; font-size: 1rem; margin: 0; }
+    .main-header h1 { 
+        color: #FFFFFF !important; 
+        font-weight: 900; 
+        font-size: 1.5rem !important; 
+        margin-bottom: 4px; 
+    }
+    .main-header p { 
+        color: #A7F3D0 !important; 
+        font-size: 0.85rem !important; 
+        margin: 0; 
+    }
 
+    /* Cards de Conteúdo */
     .glass-card {
-        background: #FFFFFF; border-radius: 16px; padding: 22px;
-        border: 2px solid #CBD5E1; margin-bottom: 20px;
+        background: #FFFFFF !important; 
+        border-radius: 14px; 
+        padding: 16px;
+        border: 1px solid #CBD5E1; 
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 16px;
     }
     
     .card-title {
-        color: #064E3B; font-size: 1.25rem; font-weight: 800; margin-bottom: 16px;
-        border-bottom: 2px solid #A7F3D0; padding-bottom: 8px;
+        color: #064E3B !important; 
+        font-size: 1.1rem !important; 
+        font-weight: 800 !important; 
+        margin-bottom: 12px;
+        border-bottom: 2px solid #A7F3D0; 
+        padding-bottom: 6px;
     }
 
-    div[data-baseweb="input"] > div, div[data-baseweb="textarea"] > div, div[data-baseweb="select"] > div {
-        background-color: #F8FAFC !important; border: 2px solid #059669 !important;
-        border-radius: 10px !important; min-height: 46px !important; font-weight: 600 !important;
+    /* Ajuste de Contraste e Leitura dos Inputs de Texto/Números */
+    label, p, span, h1, h2, h3, h4, h5, h6 {
+        color: #0F172A !important;
+        font-weight: 600;
     }
 
-    .score-balloon { background: #ECFDF5; border: 2.5px solid #10B981; border-radius: 16px; padding: 22px; text-align: center; }
-    .score-number { font-size: 3.5rem; font-weight: 900; color: #047857; margin: 10px 0; }
-    .multa-card { background: #FEF2F2; border: 2.5px solid #F87171; border-radius: 16px; padding: 22px; text-align: center; }
-    .economia-card { background: #F0FDF4; border: 2.5px solid #4ADE80; border-radius: 16px; padding: 22px; text-align: center; }
+    div[data-baseweb="input"] input, div[data-baseweb="textarea"] textarea {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+        background-color: #F8FAFC !important;
+    }
+
+    div[data-baseweb="select"] span {
+        color: #0F172A !important;
+    }
+
+    /* Botões operacionais em 100% no celular */
+    .stButton > button {
+        width: 100% !important;
+        border-radius: 10px !important;
+        padding: 12px 16px !important;
+        font-weight: 700 !important;
+    }
+
+    /* Indicadores / Cards Coloridos de Métricas */
+    .score-balloon { 
+        background: #ECFDF5 !important; 
+        border: 2px solid #10B981 !important; 
+        border-radius: 14px; 
+        padding: 16px; 
+        text-align: center; 
+        margin-bottom: 12px;
+    }
+    .score-number { 
+        font-size: 2.8rem; 
+        font-weight: 900; 
+        color: #047857 !important; 
+        margin: 6px 0; 
+    }
+    
+    .multa-card { 
+        background: #FEF2F2 !important; 
+        border: 2px solid #F87171 !important; 
+        border-radius: 14px; 
+        padding: 16px; 
+        text-align: center; 
+        margin-bottom: 12px;
+    }
+    
+    .economia-card { 
+        background: #F0FDF4 !important; 
+        border: 2px solid #4ADE80 !important; 
+        border-radius: 14px; 
+        padding: 16px; 
+        text-align: center; 
+        margin-bottom: 12px;
+    }
     
     .badge-servico {
-        background-color: #E0F2FE;
-        border: 1px solid #0284C7;
-        color: #0369A1;
-        padding: 6px 12px;
+        background-color: #E0F2FE !important;
+        border: 1px solid #0284C7 !important;
+        color: #0369A1 !important;
+        padding: 6px 10px;
         border-radius: 8px;
         font-weight: 700;
+        font-size: 0.85rem;
         margin-bottom: 6px;
         display: inline-block;
     }
@@ -207,7 +299,7 @@ st.markdown("""
 st.markdown("""
     <div class="main-header">
         <h1>🌱 EcoAudit Pro</h1>
-        <p>Plataforma Profissional de Diagnóstico de Resíduos, Auditoria de Campo e Geração de PGRS</p>
+        <p>Plataforma Profissional de Diagnóstico de Resíduos e Geração de PGRS</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -218,30 +310,28 @@ if aba_ativa == "📋 1. Local":
     with col1:
         db["consultor"] = st.text_input("❓ Quem é o Consultor Responsável?", value=db["consultor"], key="w_consultor")
         db["data_vistoria"] = st.date_input("❓ Qual a Data da Vistoria?", value=db["data_vistoria"], key="w_data")
-        db["empresa"] = st.text_input("❓ Qual a Razão Social / Nome da Empresa?", value=db["empresa"], placeholder="Ex: Metalúrgica Silva", key="w_empresa")
-        db["cnpj"] = st.text_input("❓ Qual o CNPJ / CPF da Empresa?", value=db["cnpj"], placeholder="00.000.000/0001-00", key="w_cnpj")
+        db["empresa"] = st.text_input("❓ Razão Social / Nome da Empresa?", value=db["empresa"], placeholder="Ex: Metalúrgica Silva", key="w_empresa")
+        db["cnpj"] = st.text_input("❓ CNPJ / CPF da Empresa?", value=db["cnpj"], placeholder="00.000.000/0001-00", key="w_cnpj")
         
         idx_seg = NICHOS_DISPONIVEIS.index(db["segmento"]) if db["segmento"] in NICHOS_DISPONIVEIS else 5
-        db["segmento"] = st.selectbox("🎯 Qual o Nicho / Segmento Operacional?", NICHOS_DISPONIVEIS, index=idx_seg, key="w_segmento")
+        db["segmento"] = st.selectbox("🎯 Nicho / Segmento Operacional?", NICHOS_DISPONIVEIS, index=idx_seg, key="w_segmento")
 
     with col2:
-        db["resp"] = st.text_input("❓ Quem é o Responsável Acompanhando no Cliente?", value=db["resp"], key="w_resp")
-        db["tel"] = st.text_input("❓ Qual o Telefone / WhatsApp de Contato?", value=db["tel"], key="w_tel")
-        db["email"] = st.text_input("❓ Qual o E-mail Principal do Cliente?", value=db["email"], key="w_email")
-        db["func"] = st.number_input("❓ Qual o Número Total de Funcionários?", min_value=1, value=db["func"], key="w_func")
-        db["area"] = st.number_input("❓ Qual a Área Aproximada do Imóvel (m²)?", min_value=10.0, value=db["area"], step=50.0, key="w_area")
+        db["resp"] = st.text_input("❓ Responsável Acompanhando no Cliente?", value=db["resp"], key="w_resp")
+        db["tel"] = st.text_input("❓ Telefone / WhatsApp de Contato?", value=db["tel"], key="w_tel")
+        db["email"] = st.text_input("❓ E-mail Principal do Cliente?", value=db["email"], key="w_email")
+        db["func"] = st.number_input("❓ Número Total de Funcionários?", min_value=1, value=db["func"], key="w_func")
+        db["area"] = st.number_input("❓ Área Aproximada do Imóvel (m²)?", min_value=10.0, value=db["area"], step=50.0, key="w_area")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="glass-card"><div class="card-title">⚙️ Rotina Operacional do Local</div>', unsafe_allow_html=True)
-    c_op1, c_op2, c_op3 = st.columns([2, 1, 1])
-    with c_op1:
-        st.write("**❓ Qual o Horário de Funcionamento?**")
-        col_h1, col_h2, col_h3 = st.columns([1, 0.3, 1])
-        db["h_ini"] = col_h1.time_input("Horário Inicial", value=db["h_ini"], key="w_h_ini")
-        col_h2.markdown("<h4 style='text-align: center; margin-top: 28px;'>às</h4>", unsafe_allow_html=True)
-        db["h_fim"] = col_h3.time_input("Horário Final", value=db["h_fim"], key="w_h_fim")
+    st.write("**❓ Qual o Horário de Funcionamento?**")
+    col_h1, col_h2 = st.columns(2)
+    db["h_ini"] = col_h1.time_input("Horário Inicial", value=db["h_ini"], key="w_h_ini")
+    db["h_fim"] = col_h2.time_input("Horário Final", value=db["h_fim"], key="w_h_fim")
 
+    c_op2, c_op3 = st.columns(2)
     with c_op2:
         db["filiais"] = st.pills("🏢 Possui Filiais?", ["Não", "Sim"], default=db["filiais"], key="w_filiais")
         
@@ -276,14 +366,12 @@ perguntas_auditoria = {
 if aba_ativa == "♻️ 2. Mapeamento":
     st.markdown(f'<div class="glass-card"><div class="card-title">📦 Resíduos Típicos do Segmento: {db["segmento"]}</div>', unsafe_allow_html=True)
     residuos_sugeridos = residuos_por_nicho.get(db["segmento"], [])
-    col_check1, col_check2 = st.columns(2)
     
     lista_temporaria_selecionados = []
     
     for idx, item in enumerate(residuos_sugeridos):
-        target_col = col_check1 if idx % 2 == 0 else col_check2
         ja_marcado = item in db["residuos_selecionados"]
-        if target_col.checkbox(f"✔️ {item}", value=ja_marcado, key=f"w_res_{idx}"):
+        if st.checkbox(f"✔️ {item}", value=ja_marcado, key=f"w_res_{idx}"):
             lista_temporaria_selecionados.append(item)
             
     db["outros_residuos"] = st.text_input("➕ Adicionar outro resíduo específico não listado:", value=db["outros_residuos"], key="w_outros_res")
@@ -312,14 +400,12 @@ if aba_ativa == "🔎 3. Auditoria":
 
     def render_eval_block(title, options_dict, start_idx):
         st.markdown(f'<div class="glass-card"><div class="card-title">{title}</div>', unsafe_allow_html=True)
-        cols = st.columns(len(options_dict))
         score = 0
         max_score = len(options_dict) * 10
         
         for i, (k, label) in enumerate(options_dict.items()):
-            col = cols[i % len(cols)]
             val_salvo = db["aud_resp"].get(k, "❌ Não")
-            val = col.segmented_control(label, ["❌ Não", "⚠️ Parcial", "✅ Sim"], default=val_salvo, key=f"w_aud_{k}")
+            val = st.segmented_control(label, ["❌ Não", "⚠️ Parcial", "✅ Sim"], default=val_salvo, key=f"w_aud_{k}")
             db["aud_resp"][k] = val
             if val == "✅ Sim": score += 10
             elif val == "⚠️ Parcial": score += 5
@@ -343,21 +429,18 @@ if aba_ativa == "🔎 3. Auditoria":
 # --- MÓDULO 4: CÂMERA & RISCOS ---
 if aba_ativa == "📸 4. Fotos & Riscos":
     st.markdown('<div class="glass-card"><div class="card-title">📸 Registro Fotográfico em Tempo Real</div>', unsafe_allow_html=True)
-    c_cam1, c_cam2 = st.columns(2)
-    with c_cam1:
-        foto_tirada = st.camera_input("Capturar foto do local", key="w_cam")
-        if foto_tirada:
-            db["foto_memoria"] = foto_tirada
-            st.success("📸 Foto capturada e anexada ao Relatório!")
-    with c_cam2:
-        st.file_uploader("Selecione fotos salvas", type=["jpg", "png", "jpeg"], accept_multiple_files=True, key="w_galeria")
+    foto_tirada = st.camera_input("Capturar foto do local", key="w_cam")
+    if foto_tirada:
+        db["foto_memoria"] = foto_tirada
+        st.success("📸 Foto capturada e anexada ao Relatório!")
+    
+    st.file_uploader("Selecione fotos salvas da galeria", type=["jpg", "png", "jpeg"], accept_multiple_files=True, key="w_galeria")
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="glass-card"><div class="card-title">⚠️ Matriz de Riscos Detectados</div>', unsafe_allow_html=True)
-    col_rk1, col_rk2, col_rk3 = st.columns(3)
-    db["rk_legal"] = col_rk1.select_slider("⚖️ Risco Legal", ["Baixo", "Médio", "Alto"], value=db["rk_legal"], key="w_rk_legal")
-    db["rk_amb"] = col_rk2.select_slider("🍃 Risco Ambiental", ["Baixo", "Médio", "Alto"], value=db["rk_amb"], key="w_rk_amb")
-    db["rk_op"] = col_rk3.select_slider("⚙️ Risco Operacional", ["Baixo", "Médio", "Alto"], value=db["rk_op"], key="w_rk_op")
+    db["rk_legal"] = st.select_slider("⚖️ Risco Legal", ["Baixo", "Médio", "Alto"], value=db["rk_legal"], key="w_rk_legal")
+    db["rk_amb"] = st.select_slider("🍃 Risco Ambiental", ["Baixo", "Médio", "Alto"], value=db["rk_amb"], key="w_rk_amb")
+    db["rk_op"] = st.select_slider("⚙️ Risco Operacional", ["Baixo", "Médio", "Alto"], value=db["rk_op"], key="w_rk_op")
     
     db["nc"] = st.text_area("Descreva as Não Conformidades Encontradas:", value=db["nc"], key="w_nc")
     db["rec"] = st.text_area("💡 Recomendações Imediatas:", value=db["rec"], key="w_rec")
@@ -372,7 +455,6 @@ if aba_ativa == "📸 4. Fotos & Riscos":
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # Lista global com TODAS as opções possíveis de serviços para evitar o bug de chaves
     opcoes_completas = sorted(list(set(sugestoes_auto + [
         "Elaboração do PGRS", "Elaboração do PGRS/PGRSS", "Elaboração do PGRSS (Saúde)", 
         "Elaboração do PGRCC (Obras/Construção)", "Elaboração do PGRS (Resíduos Perigosos)", 
@@ -383,7 +465,6 @@ if aba_ativa == "📸 4. Fotos & Riscos":
         "Contrato Mensal de Gestão e Acompanhamento Ambiental"
     ])))
     
-    # CORREÇÃO DO BUG: Filtra para manter somente valores válidos existentes nas opções
     valores_salvos = db["servicos"] if db["servicos"] else sugestoes_auto
     valores_validos = [s for s in valores_salvos if s in opcoes_completas]
     
@@ -416,37 +497,32 @@ if aba_ativa == "📊 5. Score & Multas":
     multa_estimada_max = round(multa_estimada_min * 3.5, 2)
     economia_ano = round(((db["kg_mes"] if db["kg_mes"] > 0 else 300.0) * 1.50 * 0.35) * 12, 2)
 
-    c_s1, c_s2 = st.columns([1, 2])
-    with c_s1:
-        st.markdown(f"""
-            <div class="score-balloon">
-                <span style="font-weight:800; color:#064E3B; text-transform:uppercase;">Score do Nicho: {db["segmento"]}</span>
-                <div class="score-number">{nota_final}<span style="font-size:1.5rem">/100</span></div>
-                <div style="font-size:1.3rem; font-weight:800; color:{cor_badge};">{situacao}</div>
-            </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+        <div class="score-balloon">
+            <span style="font-weight:800; color:#064E3B; text-transform:uppercase;">Score do Nicho: {db["segmento"]}</span>
+            <div class="score-number">{nota_final}<span style="font-size:1.5rem">/100</span></div>
+            <div style="font-size:1.3rem; font-weight:800; color:{cor_badge};">{situacao}</div>
+        </div>
+    """, unsafe_allow_html=True)
 
-    with c_s2:
-        st.markdown('<div class="glass-card"><div class="card-title">📌 Desempenho Técnico das Áreas</div>', unsafe_allow_html=True)
-        df_notas = pd.DataFrame({"Área Avaliada": ["Segregação", "Lixeiras", "Coleta Int.", "Armazenamento", "Destinação", "Documentação", "Treinamento", "Segurança"], "Nota (0-10)": db["notas"]})
-        st.dataframe(df_notas, column_config={"Nota (0-10)": st.column_config.ProgressColumn("Desempenho", format="%.1f pts", min_value=0, max_value=10)}, use_container_width=True, hide_index=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="glass-card"><div class="card-title">📌 Desempenho Técnico das Áreas</div>', unsafe_allow_html=True)
+    df_notas = pd.DataFrame({"Área Avaliada": ["Segregação", "Lixeiras", "Coleta Int.", "Armazenamento", "Destinação", "Documentação", "Treinamento", "Segurança"], "Nota (0-10)": db["notas"]})
+    st.dataframe(df_notas, column_config={"Nota (0-10)": st.column_config.ProgressColumn("Desempenho", format="%.1f pts", min_value=0, max_value=10)}, use_container_width=True, hide_index=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    col_m1, col_m2 = st.columns(2)
-    with col_m1:
-        st.markdown(f"""
-            <div class="multa-card">
-                <h4 style="color:#991B1B; margin:0;">🚨 Risco de Multa Estimado</h4>
-                <div style="font-size:2rem; font-weight:900; color:#DC2626; margin:10px 0;">R$ {multa_estimada_min:,.2f} a R$ {multa_estimada_max:,.2f}</div>
-            </div>
-        """, unsafe_allow_html=True)
-    with col_m2:
-        st.markdown(f"""
-            <div class="economia-card">
-                <h4 style="color:#065F46; margin:0;">💡 Economia Anual Estimada</h4>
-                <div style="font-size:2rem; font-weight:900; color:#059669; margin:10px 0;">R$ {(economia_ano + multa_estimada_min):,.2f} /ano</div>
-            </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+        <div class="multa-card">
+            <h4 style="color:#991B1B; margin:0;">🚨 Risco de Multa Estimado</h4>
+            <div style="font-size:1.8rem; font-weight:900; color:#DC2626; margin:8px 0;">R$ {multa_estimada_min:,.2f} a R$ {multa_estimada_max:,.2f}</div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(f"""
+        <div class="economia-card">
+            <h4 style="color:#065F46; margin:0;">💡 Economia Anual Estimada</h4>
+            <div style="font-size:1.8rem; font-weight:900; color:#059669; margin:8px 0;">R$ {(economia_ano + multa_estimada_min):,.2f} /ano</div>
+        </div>
+    """, unsafe_allow_html=True)
 
     st.button("💾 Avançar para Documentos ➡️", on_click=pular_aba, args=(LISTA_ABAS[5],), type="primary")
 
@@ -454,27 +530,26 @@ if aba_ativa == "📊 5. Score & Multas":
 if aba_ativa == "📄 6. Documentos":
     st.markdown(f'<div class="glass-card"><div class="card-title">📄 Documentos Obrigatórios do Segmento: {db["segmento"]}</div>', unsafe_allow_html=True)
     st.markdown("#### 📜 Documentos Gerais da Empresa")
-    col_d1, col_d2 = st.columns(2)
     
-    def salvar_doc(chave, titulo, coluna):
-        db["docs"][chave] = coluna.checkbox(titulo, value=db["docs"].get(chave, False), key=f"w_doc_{chave}")
+    def salvar_doc(chave, titulo):
+        db["docs"][chave] = st.checkbox(titulo, value=db["docs"].get(chave, False), key=f"w_doc_{chave}")
         
-    salvar_doc("cnpj", "📄 Cartão CNPJ / Contrato Social", col_d1)
-    salvar_doc("alvara", "🏢 Alvará de Funcionamento", col_d2)
-    salvar_doc("avcb", "🧯 AVCB / CLCB do Corpo de Bombeiros", col_d1)
-    salvar_doc("art", "🖊️ ART/CFT de Responsabilidade Técnica", col_d2)
+    salvar_doc("cnpj", "📄 Cartão CNPJ / Contrato Social")
+    salvar_doc("alvara", "🏢 Alvará de Funcionamento")
+    salvar_doc("avcb", "🧯 AVCB / CLCB do Corpo de Bombeiros")
+    salvar_doc("art", "🖊️ ART/CFT de Responsabilidade Técnica")
 
     st.markdown("---")
     st.markdown(f"#### 🎯 Documentos Específicos para {db['segmento']}")
     if db["segmento"] == "Saúde / Veterinária":
-        salvar_doc("saude1", "🩺 Licença Sanitária (LVS/CVS)", st)
-        salvar_doc("saude2", "🚛 Contrato com Coletora Infectantes (Grupo A/E)", st)
-        salvar_doc("saude3", "📦 MTRs e CDFs de Resíduos de Saúde", st)
+        salvar_doc("saude1", "🩺 Licença Sanitária (LVS/CVS)")
+        salvar_doc("saude2", "🚛 Contrato com Coletora Infectantes (Grupo A/E)")
+        salvar_doc("saude3", "📦 MTRs e CDFs de Resíduos de Saúde")
     elif db["segmento"] == "Oficina / Posto / Funilaria":
-        salvar_doc("ofi1", "📜 Licença Ambiental de Operação (LO)", st)
-        salvar_doc("ofi2", "🛢️ Contrato e MTR de OLUC (Óleo Usado - ANP)", st)
+        salvar_doc("ofi1", "📜 Licença Ambiental de Operação (LO)")
+        salvar_doc("ofi2", "🛢️ Contrato e MTR de OLUC (Óleo Usado - ANP)")
     else:
-        salvar_doc("gen1", "📜 Comprovante de Coleta Seletiva / Cooperativa", st)
+        salvar_doc("gen1", "📜 Comprovante de Coleta Seletiva / Cooperativa")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -488,7 +563,6 @@ def gerar_pdf_relatorio():
     pdf = FPDF()
     pdf.add_page()
     
-    # Cabeçalho Principal (Verde Escuro)
     pdf.set_fill_color(5, 150, 105)
     pdf.rect(0, 0, 210, 32, 'F')
     pdf.set_font("Helvetica", "B", 18)
@@ -500,7 +574,6 @@ def gerar_pdf_relatorio():
     
     pdf.set_text_color(15, 23, 42)
     
-    # --- 1. DADOS CADASTRAIS E OPERACIONAIS ---
     pdf.set_font("Helvetica", "B", 12)
     pdf.set_fill_color(226, 232, 240)
     pdf.cell(0, 7, limpar_texto_pdf(" 1. DADOS DO CLIENTE E VISTORIA"), ln=True, fill=True)
@@ -520,7 +593,6 @@ def gerar_pdf_relatorio():
     pdf.cell(90, 5, limpar_texto_pdf(f"Área Construída: {db['area']} m²"), ln=1)
     pdf.ln(5)
 
-    # --- 2. RESUMO DO DIAGNÓSTICO, SCORE E MULTAS ---
     pdf.set_font("Helvetica", "B", 12)
     pdf.cell(0, 7, limpar_texto_pdf(" 2. INDICADORES DE RISCO E DIAGNÓSTICO FINANCEIRO"), ln=True, fill=True)
     pdf.set_font("Helvetica", "", 9)
@@ -554,7 +626,6 @@ def gerar_pdf_relatorio():
     pdf.cell(63, 5, limpar_texto_pdf(f"Risco Operacional: {db['rk_op']}"), ln=1)
     pdf.ln(5)
 
-    # --- 3. MAPEAMENTO DE RESÍDUOS ---
     pdf.set_font("Helvetica", "B", 12)
     pdf.cell(0, 7, limpar_texto_pdf(" 3. MAPEAMENTO DE RESÍDUOS GERADOS"), ln=True, fill=True)
     pdf.set_font("Helvetica", "", 9)
@@ -565,7 +636,6 @@ def gerar_pdf_relatorio():
     pdf.cell(0, 5, limpar_texto_pdf(f"Geração Estimada: ~{db['kg_dia']} kg/dia (Aprox. {db['kg_mes']} kg/mês)"), ln=True)
     pdf.ln(5)
 
-    # --- 4. NÃO CONFORMIDADES E RECOMENDAÇÕES ---
     pdf.set_font("Helvetica", "B", 12)
     pdf.cell(0, 7, limpar_texto_pdf(" 4. NÃO CONFORMIDADES E RECOMENDAÇÕES"), ln=True, fill=True)
     pdf.set_font("Helvetica", "", 9)
@@ -583,7 +653,6 @@ def gerar_pdf_relatorio():
     pdf.multi_cell(0, 5, limpar_texto_pdf(db["rec"] if db["rec"] else "Sem recomendações cadastradas."))
     pdf.ln(5)
 
-    # --- 5. SERVIÇOS RECOMENDADOS / PROPOSTA ---
     if db.get("servicos"):
         pdf.set_font("Helvetica", "B", 12)
         pdf.cell(0, 7, limpar_texto_pdf(" 5. PLANO DE ADEQUAÇÃO E SERVIÇOS RECOMENDADOS"), ln=True, fill=True)
@@ -593,7 +662,6 @@ def gerar_pdf_relatorio():
             pdf.cell(0, 5, limpar_texto_pdf(f"• {srv}"), ln=True)
         pdf.ln(5)
 
-    # --- 6. REGISTRO FOTOGRÁFICO (SE HOUVER) ---
     if db.get("foto_memoria") is not None:
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_file:
@@ -616,7 +684,6 @@ def gerar_pdf_minuta_pgrs():
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     
-    # CAPA DO DOCUMENTO
     pdf.add_page()
     pdf.set_fill_color(6, 78, 59)
     pdf.rect(0, 0, 210, 297, 'F')
@@ -646,11 +713,9 @@ def gerar_pdf_minuta_pgrs():
     pdf.cell(0, 6, limpar_texto_pdf(f"Responsável Técnico: {db['consultor']}"), ln=True, align="C")
     pdf.cell(0, 6, limpar_texto_pdf(f"Data de Emissão: {db['data_vistoria'].strftime('%d/%m/%Y')}"), ln=True, align="C")
 
-    # CONTEÚDO TÉCNICO COMPLETO
     pdf.add_page()
     pdf.set_text_color(15, 23, 42)
     
-    # 1. IDENTIFICAÇÃO DO EMPREENDIMENTO
     pdf.set_font("Helvetica", "B", 13)
     pdf.set_fill_color(226, 232, 240)
     pdf.cell(0, 8, limpar_texto_pdf(" 1. IDENTIFICAÇÃO DO EMPREENDIMENTO E RESPONSÁVEIS"), ln=True, fill=True)
@@ -670,7 +735,6 @@ def gerar_pdf_minuta_pgrs():
     pdf.cell(90, 6, limpar_texto_pdf(f"Contato: {db['tel']} | {db['email']}"), ln=1)
     pdf.ln(6)
 
-    # 2. EMBASAMENTO LEGAL E OBJETIVOS
     pdf.set_font("Helvetica", "B", 13)
     pdf.cell(0, 8, limpar_texto_pdf(" 2. EMBASAMENTO LEGAL E OBJETIVOS DO PLANO"), ln=True, fill=True)
     pdf.ln(3)
@@ -687,7 +751,6 @@ def gerar_pdf_minuta_pgrs():
     ))
     pdf.ln(6)
 
-    # 3. CARACTERIZAÇÃO E QUANTIFICAÇÃO DOS RESÍDUOS
     pdf.set_font("Helvetica", "B", 13)
     pdf.cell(0, 8, limpar_texto_pdf(" 3. CARACTERIZAÇÃO E QUANTIFICAÇÃO DOS RESÍDUOS"), ln=True, fill=True)
     pdf.ln(3)
@@ -705,7 +768,6 @@ def gerar_pdf_minuta_pgrs():
     ))
     pdf.ln(6)
 
-    # 4. PROCEDIMENTOS OPERACIONAIS DE MANEJO
     pdf.set_font("Helvetica", "B", 13)
     pdf.cell(0, 8, limpar_texto_pdf(" 4. PROCEDIMENTOS OPERACIONAIS DE MANEJO INTERNO E EXTERNO"), ln=True, fill=True)
     pdf.ln(3)
@@ -727,7 +789,6 @@ def gerar_pdf_minuta_pgrs():
     ))
     pdf.ln(6)
 
-    # 5. PLANO DE AÇÃO E MELHORIAS TÉCNICAS
     pdf.set_font("Helvetica", "B", 13)
     pdf.cell(0, 8, limpar_texto_pdf(" 5. PLANO DE AÇÃO E CRONOGRAMA DE ADEQUAÇÃO"), ln=True, fill=True)
     pdf.ln(3)
@@ -741,7 +802,6 @@ def gerar_pdf_minuta_pgrs():
     ))
     pdf.ln(8)
 
-    # 6. ENCERRAMENTO E ASSINATURAS
     pdf.set_font("Helvetica", "B", 13)
     pdf.cell(0, 8, limpar_texto_pdf(" 6. TERMO DE COMPROMISSO E ENCERRAMENTO"), ln=True, fill=True)
     pdf.ln(3)
@@ -808,19 +868,15 @@ if aba_ativa == "🚀 7. Plano de Ação & Minuta PGRS":
     nome_base = formatar_nome_arquivo(db["empresa"] if db["empresa"] else "Empresa", db["segmento"])
 
     st.markdown('<div class="glass-card"><div class="card-title">📥 Gerar Minuta do PGRS & Relatórios Técnicos</div>', unsafe_allow_html=True)
-    col_d1, col_d2, col_d3 = st.columns(3)
+    
+    st.markdown("##### 📄 Relatório Técnico")
+    st.download_button("🔴 BAIXAR RELATÓRIO", data=gerar_pdf_relatorio(), file_name=f"Relatorio_{nome_base}.pdf", mime="application/pdf", use_container_width=True)
 
-    with col_d1:
-        st.markdown("##### 📄 Relatório Técnico")
-        st.download_button("🔴 BAIXAR RELATÓRIO", data=gerar_pdf_relatorio(), file_name=f"Relatorio_{nome_base}.pdf", mime="application/pdf", use_container_width=True)
+    st.markdown("##### 📜 Minuta do PGRS")
+    st.download_button("📘 BAIXAR MINUTA PGRS", data=gerar_pdf_minuta_pgrs(), file_name=f"Minuta_{nome_base}.pdf", mime="application/pdf", use_container_width=True)
 
-    with col_d2:
-        st.markdown("##### 📜 Minuta do PGRS")
-        st.download_button("📘 BAIXAR MINUTA PGRS", data=gerar_pdf_minuta_pgrs(), file_name=f"Minuta_{nome_base}.pdf", mime="application/pdf", use_container_width=True)
-
-    with col_d3:
-        st.markdown("##### 📊 Planilha Excel")
-        st.download_button("🟢 BAIXAR EXCEL", data=gerar_excel_avancado(), file_name=f"Auditoria_{nome_base}.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", use_container_width=True)
+    st.markdown("##### 📊 Planilha Excel")
+    st.download_button("🟢 BAIXAR EXCEL", data=gerar_excel_avancado(), file_name=f"Auditoria_{nome_base}.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", use_container_width=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
     st.button("💾 Avançar para Calculadora ➡️", on_click=pular_aba, args=(LISTA_ABAS[7],), type="primary")
@@ -860,20 +916,16 @@ if aba_ativa == "💰 8. Calculadora de Orçamento":
     st.markdown("---")
     st.markdown(f"**⏱️ Horas Calculadas Automaticamente:** `{h_visita_base}h (Visita)` + `{h_area}h (Área)` + `{horas_totais_servicos}h (Serviços)` = **`{horas_calculadas} horas`**")
     
-    col_o1, col_o2 = st.columns(2)
-    with col_o1:
-        horas_finais = st.number_input("⏱️ Total de Horas Técnicas Utilizadas no Cálculo:", min_value=1, value=horas_calculadas, key="w_h_calc")
-        db["v_hora"] = st.number_input("❓ Valor da Sua Hora Técnica (R$):", min_value=10.0, value=db["v_hora"], step=10.0, key="w_v_hora")
-    with col_o2:
-        db["c_extra"] = st.number_input("❓ Custos Extras (Deslocamento/ART):", min_value=0.0, value=db["c_extra"], step=20.0, key="w_c_extra")
-        db["margem"] = st.slider("❓ Margem de Lucro (%):", 0, 100, value=db["margem"], key="w_margem")
+    horas_finais = st.number_input("⏱️ Total de Horas Técnicas Utilizadas no Cálculo:", min_value=1, value=horas_calculadas, key="w_h_calc")
+    db["v_hora"] = st.number_input("❓ Valor da Sua Hora Técnica (R$):", min_value=10.0, value=db["v_hora"], step=10.0, key="w_v_hora")
+    db["c_extra"] = st.number_input("❓ Custos Extras (Deslocamento/ART):", min_value=0.0, value=db["c_extra"], step=20.0, key="w_c_extra")
+    db["margem"] = st.slider("❓ Margem de Lucro (%):", 0, 100, value=db["margem"], key="w_margem")
 
     custo_base = (horas_finais * db["v_hora"]) + db["c_extra"]
     valor_proposta = custo_base * (1 + (db["margem"] / 100))
 
-    c_res1, c_res2 = st.columns(2)
-    c_res1.markdown(f'<div class="score-balloon"><span style="font-weight:800;">CUSTO BRUTO DE EXECUÇÃO</span><div style="font-size:2rem; font-weight:900;">R$ {custo_base:,.2f}</div></div>', unsafe_allow_html=True)
-    c_res2.markdown(f'<div class="score-balloon"><span style="font-weight:800; color:#064E3B;">VALOR FINAL RECOMENDADO</span><div style="font-size:2.2rem; font-weight:900; color:#059669;">R$ {valor_proposta:,.2f}</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="score-balloon"><span style="font-weight:800;">CUSTO BRUTO DE EXECUÇÃO</span><div style="font-size:1.8rem; font-weight:900;">R$ {custo_base:,.2f}</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="score-balloon"><span style="font-weight:800; color:#064E3B;">VALOR FINAL RECOMENDADO</span><div style="font-size:2rem; font-weight:900; color:#059669;">R$ {valor_proposta:,.2f}</div></div>', unsafe_allow_html=True)
 
     st.button("💾 Avançar para Passo a Passo ➡️", on_click=pular_aba, args=(LISTA_ABAS[8],), type="primary")
 
@@ -881,7 +933,7 @@ if aba_ativa == "💰 8. Calculadora de Orçamento":
 if aba_ativa == "📋 9. Passo a Passo do Gerenciamento":
     st.markdown('<div class="glass-card"><div class="card-title">📚 Tutorial Prático de Elaboração do PGRS</div>', unsafe_allow_html=True)
     st.markdown("""
-    Este guia serve como um roteiro estruturado para conduzir a consultoria técnica e elaborar o Plano de Gerenciamento de Resíduos Sólidos (PGRS) em plena conformidade com a **Lei Federal nº 12.305/10 (PNRS)**.
+    Este guia serve como um roteiro estruturado para conduzir a consultoria técnica e elaborar o Plano de Gerenciamento de Resíduos Sólidos (PGRS) em conformidade com a **Lei Federal nº 12.305/10 (PNRS)**.
 
     ---
 
@@ -920,27 +972,24 @@ if aba_ativa == "📋 9. Passo a Passo do Gerenciamento":
 # --- MÓDULO 10: LEGISLAÇÃO ---
 if aba_ativa == "📜 10. Legislação & Sistemas":
     st.markdown('<div class="glass-card"><div class="card-title">📖 Guia Técnico de Legislação e Sistemas Regulatórios</div>', unsafe_allow_html=True)
-    st.caption("Consulte as principais diretrizes ambientais para fundamentar pareceres e relatórios técnicos (clique no ícone 🔗 para abrir a fonte oficial):")
+    st.caption("Consulte as principais diretrizes ambientais para fundamentar pareceres e relatórios técnicos:")
 
-    col_leg1, col_leg2 = st.columns(2)
+    st.markdown("### 🏛️ **Principais Leis e Normas Federais**")
+    st.markdown("""
+    * **Lei Federal nº 12.305/2010 (PNRS)** [🔗](https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm): Institui a Política Nacional de Resíduos Sólidos, responsabilidade compartilhada e a obrigatoriedade do PGRS.
+    * **ABNT NBR 10004:2004** [🔗](https://cetesb.sp.gov.br/wp-content/uploads/2014/12/NBR10004.pdf):
+      * **Classe I (Perigosos):** Óleos, filtros, químicos (inflamáveis, tóxicos).
+      * **Classe II A (Não Inertes):** Papel, plástico, orgânicos.
+      * **Classe II B (Inertes):** Entulho limpo, vidros.
+    * **RDC ANVISA nº 222/2018 (Saúde)** [🔗](https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2018/rdc0222_28_03_2018.pdf): Grupos A (Biológicos), B (Químicos), C (Radioativos), D (Comuns) e E (Perfurocortantes).
+    * **Resolução CONAMA nº 307/2002 (Obras)** [🔗](http://conama.mma.gov.br/resolucoes/2002/res307.html): Classes A (Alvenaria), B (Plásticos/Madeira), C (Gesso), D (Tintas/Telhas).
+    """)
 
-    with col_leg1:
-        st.markdown("### 🏛️ **Principais Leis e Normas Federais**")
-        st.markdown("""
-        * **Lei Federal nº 12.305/2010 (PNRS)** [🔗](https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm): Institui a Política Nacional de Resíduos Sólidos, responsabilidade compartilhada e a obrigatoriedade do PGRS.
-        * **ABNT NBR 10004:2004** [🔗](https://cetesb.sp.gov.br/wp-content/uploads/2014/12/NBR10004.pdf):
-          * **Classe I (Perigosos):** Óleos, filtros, químicos (inflamáveis, tóxicos).
-          * **Classe II A (Não Inertes):** Papel, plástico, orgânicos.
-          * **Classe II B (Inertes):** Entulho limpo, vidros.
-        * **RDC ANVISA nº 222/2018 (Saúde)** [🔗](https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2018/rdc0222_28_03_2018.pdf): Grupos A (Biológicos), B (Químicos), C (Radioativos), D (Comuns) e E (Perfurocortantes).
-        * **Resolução CONAMA nº 307/2002 (Obras)** [🔗](http://conama.mma.gov.br/resolucoes/2002/res307.html): Classes A (Alvenaria), B (Plásticos/Madeira), C (Gesso), D (Tintas/Telhas).
-        """)
-
-    with col_leg2:
-        st.markdown("### 🌐 **Sistemas Ambientais & Órgãos Reguladores**")
-        st.markdown("""
-        * **MTR (Manifesto de Transporte de Resíduos)** [🔗](https://sinir.gov.br/sistemas/mtr/): Documento obrigatório para acompanhar o transporte de resíduos da origem até o destinador final. Emitido eletronicamente.
-        * **SINIR** [🔗](https://sinir.gov.br/): Plataforma do Ministério do Meio Ambiente que consolida dados do MTR nacional e Inventários.
-        * **SIGOR (São Paulo)** [🔗](https://cetesb.sp.gov.br/sigor/): Sistema estadual gerido pela CETESB para controle de MTR e emissão de CADRI (Certificado de Movimentação de Resíduos de Interesse Ambiental).
-        * **CETESB / Órgãos Estaduais** [🔗](https://cetesb.sp.gov.br/): Agências encarregadas do licenciamento ambiental (LP, LI, LO) e fiscalização.
-        """)
+    st.markdown("---")
+    st.markdown("### 🌐 **Sistemas Ambientais & Órgãos Reguladores**")
+    st.markdown("""
+    * **MTR (Manifesto de Transporte de Resíduos)** [🔗](https://sinir.gov.br/sistemas/mtr/): Documento obrigatório para acompanhar o transporte de resíduos da origem até o destinador final. Emitido eletronicamente.
+    * **SINIR** [🔗](https://sinir.gov.br/): Plataforma do Ministério do Meio Ambiente que consolida dados do MTR nacional e Inventários.
+    * **SIGOR (São Paulo)** [🔗](https://cetesb.sp.gov.br/sigor/): Sistema estadual gerido pela CETESB para controle de MTR e emissão de CADRI.
+    * **CETESB / Órgãos Estaduais** [🔗](https://cetesb.sp.gov.br/): Agências encarregadas do licenciamento ambiental (LP, LI, LO) e fiscalização.
+    """)
